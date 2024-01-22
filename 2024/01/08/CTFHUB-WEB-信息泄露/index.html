@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"defalut"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="目录遍历">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB信息泄露">
+<meta property="og:url" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/index.html">
+<meta property="og:site_name" content="Crrrln">
+<meta property="og:description" content="目录遍历">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86-%E8%84%9A%E6%9C%AC.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/phpinfo.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/svn.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/svn_entites.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/svn_sqlite.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/svn404.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/dvcs%E8%BF%98%E5%8E%9F.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/svnflag.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/hg%E6%B3%84%E9%9C%B2.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/hg%E6%81%A2%E5%A4%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/hgflag.png">
+<meta property="article:published_time" content="2024-01-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-14T07:28:58.261Z">
+<meta property="article:author" content="Crrrln">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="信息泄露">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86.png">
+
+
+<link rel="canonical" href="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/","path":"2024/01/08/CTFHUB-WEB-信息泄露/","title":"WEB信息泄露"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>WEB信息泄露 | Crrrln</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Crrrln</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86"><span class="nav-number">1.</span> <span class="nav-text">目录遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-wp"><span class="nav-number">1.1.</span> <span class="nav-text">0x01 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpinfo"><span class="nav-number">2.</span> <span class="nav-text">phpinfo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp"><span class="nav-number">2.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SVN%E6%B3%84%E9%9C%B2"><span class="nav-number">3.</span> <span class="nav-text">SVN泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-1"><span class="nav-number">3.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp-1"><span class="nav-number">3.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HG%E6%B3%84%E9%9C%B2"><span class="nav-number">4.</span> <span class="nav-text">HG泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-2"><span class="nav-number">4.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp-2"><span class="nav-number">4.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">参考：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crrrln</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crrrln">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="WEB信息泄露 | Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WEB信息泄露
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-08 00:00:00" itemprop="dateCreated datePublished" datetime="2024-01-08T00:00:00+08:00">2024-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-14 15:28:58" itemprop="dateModified" datetime="2024-01-14T15:28:58+08:00">2024-01-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/ctfhub/" itemprop="url" rel="index"><span itemprop="name">ctfhub</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h3><h4 id="0x01-wp"><a href="#0x01-wp" class="headerlink" title="0x01 wp"></a>0x01 wp</h4><p>发现有很多目录，点进去1&#x2F;1就发现有个flag.txt，即得到flag</p>
+<p><img src="%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86.png"></p>
+<p>看到大部分用的是写的脚本，故学习了一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;http://challenge-7210de67944bdd54.sandbox.ctfhub.com:10800/flag_in_here&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        tmpurl = url+<span class="string">&#x27;/&#x27;</span>+<span class="built_in">str</span>(i)+<span class="string">&#x27;/&#x27;</span>+<span class="built_in">str</span>(j)</span><br><span class="line">        <span class="comment">#获取页面信息</span></span><br><span class="line">        r = requests.get(tmpurl)</span><br><span class="line">        <span class="comment">#r.encoding = &quot;utf-8&quot;</span></span><br><span class="line">        t = r.text</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;flag.txt&quot;</span> <span class="keyword">in</span> t:</span><br><span class="line">            <span class="built_in">print</span>(tmpurl)</span><br></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<p><img src="%E6%96%87%E4%BB%B6%E9%81%8D%E5%8E%86-%E8%84%9A%E6%9C%AC.png"></p>
+<h3 id="phpinfo"><a href="#phpinfo" class="headerlink" title="phpinfo"></a>phpinfo</h3><h4 id="0x01-前置知识"><a href="#0x01-前置知识" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><ul>
+<li><p>phpinfo是什么</p>
+</li>
+<li><p><code>phpinfo()</code> 是php中查看相关信息的函数，当在页面中执行<code>phpinfo()</code>函数时，php会将自身的所有信息全部打印出来。在phpinfo中会泄露很多服务端的一些信息</p>
+</li>
+<li><p>phpinfo中需要关注的点	</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">system info 详细的操作系统信息 确定window <span class="keyword">or </span>linux</span><br><span class="line">Registered PHP Streams <span class="keyword">and </span>filters 注册的php过滤器和流协议</span><br><span class="line"><span class="keyword">extension_dir </span>php扩展的路径</span><br><span class="line"><span class="keyword">short_open_tag </span>&lt;?= 和 &lt;? echo 等价 允许php标签为&lt;? ?&gt;形式</span><br><span class="line"><span class="keyword">disable_function </span>禁用函数</span><br><span class="line">open_basedir 将用户可操作的文件限制在某目录下</span><br><span class="line">SERVER_ADDR 真实ip</span><br><span class="line">DOCUMENT_ROOT web根目录</span><br><span class="line">_FILES[<span class="string">&quot;file&quot;</span>] 可以获取临时文件名字和路径</span><br><span class="line">session 可以查看session的相关配置</span><br><span class="line">gopher 可以实现ssrf攻击</span><br><span class="line">fastcgi 查看是否开启fastcgi和fastcgi的版本，可能导致解析漏洞、远程命令执行、任意文件读取等问题</span><br><span class="line">allow_url_include和allow_url_fopen，都可以远程包含文件</span><br><span class="line"><span class="keyword">extension_dir </span>php扩展的路径</span><br><span class="line">asp_tags 开启后，才可以对asp标签进行解析</span><br><span class="line">magic_quotes_gpc 对字符进行转义类似<span class="keyword">addslashes()</span></span><br><span class="line"><span class="keyword"></span>open_basedir 将用户可操作的文件限制在某目录下，可以绕过</span><br><span class="line">libxml <span class="number">2</span>.<span class="number">9</span>以前的版本默认支持并开启了外部实体的引用，会导致XXE</span><br><span class="line">opcache 当开启了opcache并可以上传文件时，可以在本地生成一个与服务器文件名相同的文件，并生成缓存文件xx.php.<span class="keyword">bin。上传后恶意缓存文件会将服务器上的原文件覆盖，从而getshell。</span></span><br><span class="line"><span class="keyword"></span>imap CVE<span class="number">-2018</span><span class="number">-19518</span></span><br><span class="line">session 可以看session的存储路径，session包含可以用到</span><br><span class="line">upload_tmp_dir 可以查看临时文件存放的文件夹，但是文件名是随机的</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="0x02-wp"><a href="#0x02-wp" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p>点开phpinfo.php，直接全局搜索flag即可得到</p>
+<p><img src="phpinfo.png"></p>
+<h3 id="SVN泄露"><a href="#SVN泄露" class="headerlink" title="SVN泄露"></a>SVN泄露</h3><h4 id="0x01-前置知识-1"><a href="#0x01-前置知识-1" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><ul>
+<li><p>svn是源代码版本管理软件，造成SVN源代码漏洞的主要原因是管理员操作不规范。</p>
+</li>
+<li><p>当开发人员使用 SVN 进行版本控制，对站点自动部署。如果配置不当,可能会将.svn文件夹直接部署到线上环境。这就引起了 SVN 泄露漏洞。</p>
+</li>
+<li><p>.svn目录（隐藏目录）</p>
+<ul>
+<li>在SVN1.6及之前的版本，生成的.svn文件夹中包含所有文件的备份</li>
+<li>在SVN1.6之后的版本，通过访问.svn&#x2F;wc.db，可以下载到一个SQLite数据库文件，其中可能包括目录结构与代码</li>
+</ul>
+</li>
+<li><p>SVN产生的.svn目录下还包含了以.svn-base结尾的源代码文件副本（低版本SVN具体路径为text-base目录，高版本SVN为pristine目录）</p>
+</li>
+</ul>
+<h4 id="0x02-wp-1"><a href="#0x02-wp-1" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p>题目提示：信息泄露 - Subversion  Flag 在服务端旧版本的源代码中</p>
+<p>先用dirsearch扫描，<code>dirsearch -u http://challenge-b7228b1e949b6be3.sandbox.ctfhub.com:10800 -e*</code>，发现存在两个文件，分别是<code>/.svn/entries</code>和<code>/.svn/wc.db</code>，表明存在.svn泄露</p>
+<p><img src="svn.png"></p>
+<p>先查看文件<code>/.svn/entries</code>，什么都没有发现</p>
+<p><img src="svn_entites.png"></p>
+<p>再查看文件<code>/.svn/wc.db</code>，并使用kali自带的SQLite打开，看到 NODES 表，看到repos_path栏中存在flag的txt文件</p>
+<p><img src="svn_sqlite.png"></p>
+<p>然而一访问啥也没有TAT，不用工具的话，大概就只能到这步了</p>
+<p><img src="svn404.png"></p>
+<p>向工具屈服orz，使用官方推荐工具<a target="_blank" rel="noopener" href="https://github.com/kost/dvcs-ripper">dvcs-ripper</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复文件</span></span><br><span class="line">./rip-svn.pl -v -u http://challenge-e2df238b01611657.sandbox.ctfhub.com:10800/.svn/ </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看文件</span></span><br><span class="line"><span class="comment"># ls看不到隐藏的文件夹.svn</span></span><br><span class="line"><span class="built_in">ls</span> -al</span><br></pre></td></tr></table></figure>
+
+<p><img src="dvcs%E8%BF%98%E5%8E%9F.png"></p>
+<p>经过上述操作，得知flag.txt文件已经被删除了，pristine文件夹里包含了整个项目的所有文件备份，故去pristine文件下面寻找，分别点开文件进行查看即得到flag</p>
+<p><img src="svnflag.png"></p>
+<h3 id="HG泄露"><a href="#HG泄露" class="headerlink" title="HG泄露"></a>HG泄露</h3><h4 id="0x01-前置知识-2"><a href="#0x01-前置知识-2" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><ul>
+<li>Mercurial 是一种轻量级分布式版本控制系统，执行 Mercurial 的命令是 hg，hg在初始化代码库的时候，会在当前目录下面产生一个.hg的隐藏文件。</li>
+<li>Mercurial使用.hg目录来存储仓库的元数据和版本历史记录，该目录包含了项目的完整历史记录、分支、标签、配置信息等。</li>
+<li>当开发人员使用 Mercurial 进行版本控制，对站点自动部署。如果配置不当,可能会将.hg 文件夹直接部署到线上环境。这就引起了 hg 泄露漏洞。</li>
+</ul>
+<h4 id="0x02-wp-2"><a href="#0x02-wp-2" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p>先用dirsearch扫描，存在.hg泄露</p>
+<p><img src="hg%E6%B3%84%E9%9C%B2.png"></p>
+<p>学聪明了，用刚刚的dvcs-ripper工具，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复文件</span></span><br><span class="line">./rip-hg.pl -v -u http://challenge-c135ab9e50939ea7.sandbox.ctfhub.com:10800/.hg/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看文件</span></span><br><span class="line"><span class="comment"># ls看不到隐藏的文件夹.svn</span></span><br><span class="line"><span class="built_in">ls</span> -al</span><br></pre></td></tr></table></figure>
+
+<p>发现部分文件无法恢复，查看被恢复的文件</p>
+<p><img src="hg%E6%81%A2%E5%A4%8D.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看目录结构</span></span><br><span class="line">tree .hg/ </span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索关键字</span></span><br><span class="line">grep -a -r flag </span><br><span class="line"></span><br><span class="line"><span class="comment"># 结合题意，手工访问，得到flag</span></span><br><span class="line">curl http://challenge-c135ab9e50939ea7.sandbox.ctfhub.com:10800/flag_99448543.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="hgflag.png"></p>
+<p>呼~信息泄露部分完结撒花✿✿ヽ(°▽°)ノ✿~~</p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://writeup.ctfhub.com/Skill/Web/%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/sr8tCrC9D6oZv9vttVPzu9.html">ctfhub-wp</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/6131">浅谈ctf中phpinfo需要关注的点</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/634781217">渗透测试流程——SVN常见的安全问题</a></p>
+<p><a target="_blank" rel="noopener" href="https://writeup.ctfhub.com/Skill/Web/%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/o2kexGRGwfdLoMSXPpyFZy.html">SVN泄露</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.gm7.org/%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93/01.%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/02.web%E6%BC%8F%E6%B4%9E/29.%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F/05..hg%E6%BA%90%E7%A0%81%E6%B3%84%E6%BC%8F">.hg源码泄漏</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Crrrln
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" title="WEB信息泄露">http://example.com/2024/01/08/CTFHUB-WEB-信息泄露/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+              <a href="/tags/%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" rel="tag"># 信息泄露</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/03/CTFHUB-WEB-%E5%AF%86%E7%A0%81%E5%8F%A3%E4%BB%A4/" rel="prev" title="密码口令">
+                  <i class="fa fa-angle-left"></i> 密码口令
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/08/CTFHUB-WEB-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2-%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" rel="next" title="备份文件下载">
+                  备份文件下载 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<!--
+-->
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Crrrln</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">17k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">28 分钟</span>
+  </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
