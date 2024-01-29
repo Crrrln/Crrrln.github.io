@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"defalut"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="家里的老古董windowsXP好久不用了，最近接到上级指令，得修一修能登录系统，于是穿上工作服化身修理工准备修电脑(^o^)&#x2F;~（不是）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windowsXP忘记开机密码解决办法">
+<meta property="og:url" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/index.html">
+<meta property="og:site_name" content="Crrrln">
+<meta property="og:description" content="家里的老古董windowsXP好久不用了，最近接到上级指令，得修一修能登录系统，于是穿上工作服化身修理工准备修电脑(^o^)&#x2F;~（不是）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/%E5%A2%9E%E5%BC%BA%E7%89%88%E4%B8%8B%E8%BD%BD.png">
+<meta property="og:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/%E9%BB%98%E8%AE%A4.png">
+<meta property="og:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/8.png">
+<meta property="og:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/diskpart.png">
+<meta property="og:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/%E7%A3%81%E7%9B%981.png">
+<meta property="article:published_time" content="2024-01-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-29T09:36:44.658Z">
+<meta property="article:author" content="Crrrln">
+<meta property="article:tag" content="windowsXP">
+<meta property="article:tag" content="忘记开机密码">
+<meta property="article:tag" content="USB启动盘">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/%E5%A2%9E%E5%BC%BA%E7%89%88%E4%B8%8B%E8%BD%BD.png">
+
+
+<link rel="canonical" href="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/","path":"2024/01/29/windowsXP忘记开机密码解决办法/","title":"windowsXP忘记开机密码解决办法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>windowsXP忘记开机密码解决办法 | Crrrln</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Crrrln</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%B6%E4%BD%9CUSB%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">1. 制作USB启动盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%90%AF%E5%8A%A8%E8%A3%85%E6%9C%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.</span> <span class="nav-text">2. 启动装机工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%81%A2%E5%A4%8DU%E7%9B%98"><span class="nav-number">1.3.</span> <span class="nav-text">3. 恢复U盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B0%9D%E8%AF%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">4. 尝试使用的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crrrln</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crrrln">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="windowsXP忘记开机密码解决办法 | Crrrln">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          windowsXP忘记开机密码解决办法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-01-29 00:00:00 / 修改时间：17:36:44" itemprop="dateCreated datePublished" datetime="2024-01-29T00:00:00+08:00">2024-01-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A3%85%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">装机</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>831</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>家里的老古董windowsXP好久不用了，最近接到上级指令，得修一修能登录系统，于是穿上工作服化身修理工准备修电脑(^o^)&#x2F;~（不是）</p>
+<p>由于过于匆忙，没有留下什么截图的痕迹，我尽量清晰的说清楚修理过程的来龙去脉~~~</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1-制作USB启动盘"><a href="#1-制作USB启动盘" class="headerlink" title="1. 制作USB启动盘"></a>1. 制作USB启动盘</h3><ul>
+<li><p>准备一个空U盘，没有空U盘就需要<strong>提前备份好数据</strong>，如果只是重置密码，U盘内存2G以上即可，若需要重装系统，4G以上即可</p>
+</li>
+<li><p>搜索<code>U盘启动工具</code>，这里使用的U深度制作工具，下载增强版</p>
+<p><img src="%E5%A2%9E%E5%BC%BA%E7%89%88%E4%B8%8B%E8%BD%BD.png"></p>
+</li>
+<li><p>将下载后的<code>UShenDu_UEFI_gw.exe</code>文件放在空U盘中，双击安装运行，智能模式按照默认选择，点击开始制作</p>
+<p><img src="%E9%BB%98%E8%AE%A4.png"></p>
+<p>PS：如果提示<code>u盘启动盘制作创建ud分区失败</code>，解决方案是将该U盘先格式化，就可以制作了</p>
+</li>
+<li><p>可以模拟运行一下</p>
+</li>
+</ul>
+<h3 id="2-启动装机工具"><a href="#2-启动装机工具" class="headerlink" title="2. 启动装机工具"></a>2. 启动装机工具</h3><ul>
+<li><p>将U盘插在windowsXP上面，开机时疯狂按F12（F8 F9），即可打开启动选择界面，有几种选项，选择其中的U盘名称，我的界面中在最下方</p>
+</li>
+<li><p>点击U盘名称，即可进入U盘启动界面</p>
+</li>
+<li><p>界面如下显示，选择PE标准版，启动不了选择经典版或兼容版</p>
+<p><img src="8.png"></p>
+</li>
+<li><p>点击<code>开始——密码管理——系统密码破解工具</code>，打开界面显示SAM文件路径，即密码存储路径，点击<code>打开</code>，即列出所有用户名，点击对应的用户名并修改密码，保存修改</p>
+</li>
+<li><p>至此，修改密码完毕，重启，即可按刚刚修改的用户名密码进行登录</p>
+</li>
+</ul>
+<h3 id="3-恢复U盘"><a href="#3-恢复U盘" class="headerlink" title="3. 恢复U盘"></a>3. 恢复U盘</h3><ul>
+<li><p>右键此电脑，<code>管理—计算机管理—磁盘管理</code></p>
+</li>
+<li><p>列出了所有的磁盘，我的U盘所在位置是磁盘1，具体需要看清楚到底是哪个磁盘，很重要哦，以免误删</p>
+</li>
+<li><p>打开cmd，输入<code>diskpart</code></p>
+<p><img src="diskpart.png"></p>
+</li>
+<li><p>选择磁盘<code>select disk 1</code>，确认磁盘是否为要清空U盘<code>list disk</code>，清除<code>clean</code></p>
+<p><img src="%E7%A3%81%E7%9B%981.png"></p>
+</li>
+<li><p>此时，U盘由原来的三个小分区变成一个大分区</p>
+</li>
+<li><p>右键U盘，格式化，至此恢复为普通的U盘</p>
+</li>
+</ul>
+<h3 id="4-尝试使用的方法"><a href="#4-尝试使用的方法" class="headerlink" title="4. 尝试使用的方法"></a>4. 尝试使用的方法</h3><ul>
+<li>输入<code>Administrator</code>，密码为空，无法登录</li>
+<li>在刚开机时狂按F8，选择“带命令行的安全模式”进入，无法启动命令行模式</li>
+<li>连按五次shift</li>
+<li>暴力…</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1E84y1v7Kc/?spm_id_from=333.880.my_history.page.click&vd_source=a97d07aac5124027515604919eeca3c3">电脑忘记开机密码</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37772825">U盘启动盘怎么复原为普通U盘</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Crrrln
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2024/01/29/windowsXP%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" title="windowsXP忘记开机密码解决办法">http://example.com/2024/01/29/windowsXP忘记开机密码解决办法/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/windowsXP/" rel="tag"># windowsXP</a>
+              <a href="/tags/%E5%BF%98%E8%AE%B0%E5%BC%80%E6%9C%BA%E5%AF%86%E7%A0%81/" rel="tag"># 忘记开机密码</a>
+              <a href="/tags/USB%E5%90%AF%E5%8A%A8%E7%9B%98/" rel="tag"># USB启动盘</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A8%A1%E7%89%88/" rel="prev" title="二叉树的一些模版">
+                  <i class="fa fa-angle-left"></i> 二叉树的一些模版
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<!--
+-->
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Crrrln</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">28k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">46 分钟</span>
+  </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
